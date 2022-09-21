@@ -1,2 +1,2 @@
-# sprint-2
-repositorio para sprint 2
+# gestion de notas
+repositorio 
