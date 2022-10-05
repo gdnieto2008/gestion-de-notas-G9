@@ -59,3 +59,9 @@
     background: #EBECEC;
     color: #343A40;
 }
+
+#green {color:green}
+#card_body_1{
+    background-color: white;
+    /*background: -webkit-linear-gradient(90deg, rgb(253, 253, 253) 10%, rgb(229, 248, 57) 90%);*/
+}
