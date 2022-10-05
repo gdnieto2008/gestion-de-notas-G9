@@ -29,8 +29,8 @@ def listar_mens_ind():
 
         return jsonify(resultado)
     else:
-         resultado=controlador.listar_mensajes(1,'') 
-         return jsonify(resultado)  
+        resultado=controlador.listar_mensajes(1,'') 
+        return jsonify(resultado)  
 
 
 @app.route('/listarmensajes')
@@ -98,13 +98,13 @@ def enviar_mesanjes():
     resultado=controlador.insertar_mensajes(remitente,destinatario,asunto,cuerpo)
     if resultado:
         flash('Mensaje Enviado Correctamente')
-         
+
     else:
         flash('Error en el Envio')   
-     
+
     listadouser=controlador.listar_usuarios(remitente)    
     return render_template('mensajeria.html',datauser=listadouser)
-       
+
 
 
 @app.route('/addregistro', methods=['POST'])
@@ -128,7 +128,7 @@ def add_registro():
             flash('Informacion Almacenada')
         else:
             flash('Error en Almacenamiento')    
-           
+
 
     #flash(nom + ' ' + ape +' ' + usu +' ' + ' ' + foto + ' ' + passw)
     return redirect(url_for('registro'))
@@ -165,7 +165,7 @@ def add_materia():
     datos=request.form
     codigomat=datos['codigomat']
     nombremat=datos['nombremat']
-       
+
     return redirect(url_for('menu_materias'))  
 
 
@@ -222,4 +222,4 @@ def menu_user():
 
 
 if  __name__=='__main__':
-     app.run(debug=True)  
+    app.run(debug=True)  
