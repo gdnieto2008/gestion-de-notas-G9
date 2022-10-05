@@ -4,7 +4,7 @@ function verdatos(){
     console.log("usuario actual" + identificador)
     var url="http://localhost:5000/listamensindv";
     var data = {
-               "username":"stevenforgir@gmail.com",
+               "username":identificador,
                //"username":console.log(identificador),
                "tipo":2
                 };
