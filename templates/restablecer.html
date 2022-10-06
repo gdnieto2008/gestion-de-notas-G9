@@ -1,60 +1,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container" id="container1" >
+<div class="container" >
     <!-- Outer Row -->
     <div class="row justify-content-center">
 
         <div class="col-xl-10 col-lg-12 col-md-9">
   
           <div class="card o-hidden border-0 shadow-lg my-5">
-            <div class="card-body p-0" id="card_body_1">
+            <div class="card-body p-0">
               <!-- Nested Row within Card Body -->
               <div class="row">
                 <div class="col-lg-6 d-none d-lg-block ">
-                  <img src="https://www.zarla.com/images/zarla-instamensajes-1x1-2400x2400-20220329-873hjkbkydxcg8rm8cpd.png?crop=1:1,smart&width=250&dpr=2" class="img-fluid" alt="Responsive image" ></div>
+                  <img src="https://www.g20-insights.org/wp-content/uploads/2018/07/logo-un.png" class="img-fluid" alt="Responsive image" ></div>
                 <div class="col-lg-6">
                   <div class="p-5">
                     <div class="text-center">
-                      <h1 class="h4 text-amber-500 mb-4">Bienvenido</h1>
+                      <h1 class="h4 text-gray-900 mb-4">Recuperar Contraseña</h1>
                     </div>
-                    <form class="user" action="/validarlogin" method="post">
+                    <form class="user" action="/restablecerclave" method="post">
                       <div class="form-group mb-3">
-                        <input type="email" class="form-control form-control-user" name="username" aria-describedby="emailHelp" placeholder="Ingrese el Usuario">
+                        <input type="email" class="form-control form-control-user" name="recuuser" value="{{ datauser }}" aria-describedby="emailHelp" placeholder="Ingrese el Usuario" readonly>
                       </div>
+                     
                       <div class="form-group mb-3">
-                        <input type="password" class="form-control form-control-user" id="exampleInputPassword" name="password" placeholder="Contraseña">
+                        <input type="password" class="form-control form-control-user" name="passwd1" aria-describedby="emailHelp" placeholder="Ingrese la nueva contraseña">
                       </div>
-                                      
+                     
                       <div class="form-group mb-3">
-                        <div class="custom-control custom-checkbox small">
-                          <input type="checkbox" class="custom-control-input" id="customCheck">
-                          <label class="custom-control-label" for="customCheck">Recordar</label>
-                        </div>
+                        <input type="password" class="form-control form-control-user" name="passwd2" aria-describedby="emailHelp" placeholder="Repetir la constraseña">
                       </div>
+                     
                       
-                      <button class="btn btn-outline-secondary" id="alertas" type="submit">Ingresar</button>
+                      <button class="btn btn-outline-secondary" id="alertas" type="submit">Restablecer Contraseña</button>
 
                      
                     </form>
-                   
-                    <div class="text-center">
-                      <a class="small" href="{{ url_for('registro') }}">Registrarse</a>
-                    </div>
-                    <div class="text-center">
-                      <a class="small" href="{{ url_for('recuperar') }}">Olvide mi Contraseña</a>
-                    </div>
-
-                    
-
                     <hr>
+                    <div class="text-center">
+                        <a class="small" href="{{ url_for('login') }}">Ingresar al Sistema</a>
+                      </div>
+                      <hr>
                     {% with messages = get_flashed_messages() %}
                     {% if messages %}
                     {% for message in messages %}
                     
                     <div class="alert alert-dismissible alert-info">
                       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                      <h4 class="alert-heading">Ingreso al Sistema</h4>
+                      <h4 class="alert-heading">Validacion de Cuenta</h4>
                       <p class="mb-0">{{message}}</a>.</p>
                     </div>
                     

@@ -1,11 +1,11 @@
 function verdatos(){
     var listapost;
-    identificador = document.getElementById('login_username').value;
-    console.log("usuario actual" + identificador)
-    var url="http://localhost:5000/listamensindv";
+    identificador = document.getElementById("login_username").innerHTML;
+    
+    console.log(identificador)
+    var url="/listamensindv";
     var data = {
-               "username":"stevenforgir@gmail.com",
-               //"username":console.log(identificador),
+               "username":identificador,
                "tipo":2
                 };
     
@@ -25,6 +25,7 @@ function verdatos(){
         info=info+"<td>"+listapost[i]['id'] + "</td>"
         info=info+"<td>"+listapost[i]['remitente'] + "</td>"
         info=info+"<td>"+listapost[i]['destinatario'] + "</td>"
+        info=info+"<td>"+listapost[i]['fecha'] + "</td>"
         info=info+"<td>"+listapost[i]['asunto'] + "</td>"
         info=info+"<td>"+listapost[i]['cuerpo'] + "</td>"
         if(listapost[i]['tipo']=='Mensaje Enviado'){
@@ -70,7 +71,58 @@ function verdatos(){
         }
         )
         
-        }   
+        }
+    
+   
+function verproductos(){
+
+var listapost;
+var url="https://jsonplaceholder.typicode.com/posts"
+
+fetch(url)
+.then(response=>response.json())
+.then((data)=>{
+listapost=data;    
+var info=""    
+
+var info=""
+info=info+"<div class='row d-flex justify-content-center '>"
+
+
+
+for(var i=0;i<10;i++)
+{
+info=info+"<div class='card p-0 m-1' style='width: 18rem;'>"
+info=info +"<img src='https://tienda.claro.com.co/wcsstore/Claro/images/catalog/equipos/646x1000/70040936.jpg' class='card-img-top' alt='...'>"    
+info=info+"<div class='card-body'>"
+info=info+"<h5 class='card-title'></h5>"
+info=info+"<p class='card-text'></p>"
+info=info+"<ul class='list-group list-group-flush'>"
+info=info+"<li class='list-group-item'></li>"
+info=info+"<li class='list-group-item'></li>"
+info=info+"</ul>"
+info=info+"<a href='#' class='btn btn-primary'>Ver Perfil</a>"
+info=info+"</div>"
+info=info+"</div>"
+}
+
+info=info+"</div>"
+info=info+"</div>"
+
+document.getElementById("productos").innerHTML=info
+    
+}
+    );
+}    
+
+class profesor {
+    constructor(documento, nombre, apellido, rol) {
+      this.documento = documento;
+      this.nombre = nombre;
+      this.apellido = apellido;
+      this.rol = rol;
+    }
+}
 
 let personas = [];
 
@@ -94,6 +146,22 @@ function cargar_datos(){
         `;
     }
     listado.innerHTML = item;
+}
+
+function accion(){
+    let boton = document.getElementById('boton-accion');
+    
+    documento = document.getElementById('documento').value;
+    nombre = document.getElementById('nombre').value;
+    apellido = document.getElementById('apellido').value;
+    rol = document.getElementById('rol').value;
+    let persona = new profesor(documento,nombre,apellido,rol);
+
+    if(boton.innerHTML=='Agregar'){
+        Agregar(persona);
+    }else{
+        editar(persona);
+    }
 }
 
 function Agregar(persona){

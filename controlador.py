@@ -72,11 +72,11 @@ def listar_mensajes(tipo,username):
     try:
         db=conectar_db()
         cursor=db.cursor()
-        sql="SELECT * FROM mensajeria"
+        sql="SELECT * FROM mensajeria ORDER BY fecha DESC"
         if tipo==1:
             cursor.execute(sql)
         else:    
-            sql="SELECT *FROM mensajeria WHERE remitente=? OR destinatario=?"
+            sql="SELECT *FROM mensajeria WHERE remitente=? OR destinatario=? ORDER BY fecha DESC"
             cursor.execute(sql,[username,username])
        
         resultado=cursor.fetchall()
@@ -93,6 +93,7 @@ def listar_mensajes(tipo,username):
                 'destinatario':m[2],
                 'asunto':m[3],
                 'cuerpo':m[4],
+                'fecha':m[5],
                 'fecha_consulta':datetime.now(),
                 'tipo':tipo
                 }
@@ -173,5 +174,32 @@ def insertar_mensajes(rem,dest,asunto,cuerpo):
     except:
         return False
 
+def validar_email(username):
+    try:
+        db=conectar_db()
+        cursor=db.cursor()
+        sql='SELECT *FROM usuarios WHERE usuario=?'
+        cursor.execute(sql,[username])
+        resultado=cursor.fetchone()
+        if resultado!=None:
+            envioemail.recuperar_email(username)
+            return 'SI'
+        else:
+            return 'NO'    
+           
+    except:
+        return False
 
 
+def restablecer_clave(p1,username):
+    try:
+        print(p1)
+        print(username)
+        db=conectar_db()
+        cursor=db.cursor()
+        sql='UPDATE usuarios SET passw=? WHERE usuario=?'
+        cursor.execute(sql,[p1,username])
+        db.commit()
+        return True   
+    except:
+        return False
