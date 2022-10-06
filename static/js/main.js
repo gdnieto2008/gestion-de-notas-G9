@@ -1,6 +1,6 @@
 function verdatos(){
     var listapost;
-    identificador = document.getElementById('login_username').value;
+    identificador = document.getElementById('login_username').innerHTML;
     console.log("usuario actual" + identificador)
     var url="http://localhost:5000/listamensindv";
     var data = {
