@@ -2,7 +2,7 @@ from email.message import EmailMessage
 import smtplib
 
 def enviar_email(email_destino,codigo):
-    remitente = "stevenforero@uninorte.edu.co"
+    remitente = "ponermail@uninorte.edu.co"
     destinatario = email_destino
     mensaje = "Codigo de Confirmacion: " + codigo
     email = EmailMessage()
@@ -12,6 +12,6 @@ def enviar_email(email_destino,codigo):
     email.set_content(mensaje)
     smtp = smtplib.SMTP("smtp-mail.outlook.com", port=587)
     smtp.starttls()
-    smtp.login(remitente, "Electronico-97")
+    smtp.login(remitente, "Contraseña")
     smtp.sendmail(remitente, destinatario, email.as_string())
     smtp.quit()
