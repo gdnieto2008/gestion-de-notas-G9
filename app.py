@@ -4,9 +4,12 @@ from datetime import datetime
 import re
 from tkinter.messagebox import RETRY
 from unittest import result
+from xml.dom.minidom import ReadOnlySequentialNamedNodeMap
 from flask import Flask, jsonify, render_template, url_for,request,redirect, flash,session
 import controlador
 from werkzeug.security import generate_password_hash, check_password_hash
+
+from envioemail import enviar_email
 
 app=Flask(__name__)
 
@@ -15,6 +18,28 @@ app.secret_key='mi clave de secreta'+str(datetime.now)
 
 #########Recuperar la informacion desde los formularios#####
 ###Recuperar y Almancenar los Registros de usuario######################
+@app.route('/restablecerclave', methods=['POST'])
+def restablece_clave():
+    datos=request.form
+    print(datos)
+    usu=datos['recuuser']
+    p1=datos['passwd1']
+    p2=datos['passwd2']
+    p1enc=generate_password_hash(p1)
+    if p1!=p2:
+        flash('Contraseñas no Coinciden')
+    elif len(p1)<8:
+        flash('las contraseñas no cumplen los niveles de seguridad')
+    else:
+         resultado=controlador.restablecer_clave(p1enc,usu)
+         if resultado:
+            flash('La contraseña ha sido restablecida con exito')
+         else:
+            flash("No ha sido posibles restablecer la contraseña")   
+    
+    return render_template('restablecer.html', datauser=usu)  
+
+
 
 @app.route('/listamensindv', methods=['GET','POST'])
 def listar_mens_ind():
@@ -78,8 +103,8 @@ def val_user():
                     session['username']=username
                     session['nombre']=resultado[0]['nombre'] +" "+resultado[0]['apellido']
                     listadouser=controlador.listar_usuarios(username)
-                    print(listadouser)
-                    return render_template('mensajeria.html',datauser=listadouser)
+                    #return render_template('mensajeria.html',datauser=listadouser)
+                    return redirect(url_for('mensajeria'))
                 else:
                     flash('Contraseña Invalida')
                     return redirect(url_for('login'))
@@ -95,16 +120,20 @@ def enviar_mesanjes():
     asunto=datos['asunto']
     destinatario=datos['destinatario']
     cuerpo=datos['cuerpo']
-    resultado=controlador.insertar_mensajes(remitente,destinatario,asunto,cuerpo)
+    if asunto =='' or destinatario=='' or cuerpo=='':
+        flash('Datos incompletos')
+        resultado=False
+    else:
+        resultado=controlador.insertar_mensajes(remitente,destinatario,asunto,cuerpo)
     if resultado:
         flash('Mensaje Enviado Correctamente')
-
+         
     else:
         flash('Error en el Envio')   
 
     listadouser=controlador.listar_usuarios(remitente)    
     return render_template('mensajeria.html',datauser=listadouser)
-
+       
 
 
 @app.route('/addregistro', methods=['POST'])
@@ -116,6 +145,7 @@ def add_registro():
     p1=datos['pass1']
     p2=datos['pass2']
     p1enc=generate_password_hash(p1)
+    controlador.insertar_usuarios(nom,ape,usu,p1enc)
     if nom=='' and ape=='' and usu=='' and p1=='' and p2=='':
         flash("Datos Imcompletos")
     elif p1!=p2:
@@ -128,7 +158,7 @@ def add_registro():
             flash('Informacion Almacenada')
         else:
             flash('Error en Almacenamiento')    
-
+           
 
     #flash(nom + ' ' + ape +' ' + usu +' ' + ' ' + foto + ' ' + passw)
     return redirect(url_for('registro'))
@@ -165,7 +195,7 @@ def add_materia():
     datos=request.form
     codigomat=datos['codigomat']
     nombremat=datos['nombremat']
-
+       
     return redirect(url_for('menu_materias'))  
 
 
@@ -179,6 +209,7 @@ def index():
 
 @app.route('/login')
 def login():
+    session.clear()
     return render_template('login.html')
 
 @app.route('/registro')
@@ -192,11 +223,28 @@ def verificar():
 
 @app.route('/mensajeria')
 def mensajeria():
-    return render_template('mensajeria.html')
+    username=session['username']
+    listadouser=controlador.listar_usuarios(username)
+    return render_template('mensajeria.html',datauser=listadouser)
 
-@app.route('/mensajes')
-def mensajes():
-    return render_template('mensajes.html')    
+
+@app.route('/recuperar')
+def recuperar():
+    return render_template('recuperar.html')    
+
+@app.route('/restablecer/<usuario>')
+@app.route('/restablecer')
+def restablecer(usuario=None):
+    usuario=session['username']
+    return render_template('restablecer.html', datauser=usuario)
+    #if usuario=='':
+    #    return render_template('restablecer.html')  
+    #else:
+    #    return render_template('restablecer.html', datauser=usuario)      
+
+#@app.route('/mensajes')
+#def mensajes():
+#    return render_template('mensajes.html')    
 
 #@app.route('/menu')
 #@app.route('/menu/<username>/')
@@ -216,9 +264,14 @@ def mensajes():
 def menu():
     return render_template('menu.html')
 
-@app.route('/usuarios')
-def menu_user():
-    return render_template('usuarios.html')
+
+@app.before_request
+def proteger_rutas():
+    ruta=request.path
+
+    if not 'username' in session and (ruta=='/menu' or ruta=='/mensajeria'):
+        flash('Por favor debe loguearse en el sistema')
+        return redirect('/login')
 
 
 if  __name__=='__main__':
