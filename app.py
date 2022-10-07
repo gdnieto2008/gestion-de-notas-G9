@@ -41,22 +41,6 @@ def restablece_clave():
 
 
 
-@app.route('/validaremail', methods=['POST'])
-def validar_email():
-    datos=request.form
-    usu=datos['username']
-    resultado=controlador.validar_email(usu)
-    if resultado=='SI':
-        
-        flash('Usuario Encontrado: Link de recuperacion enviado al correo')
-    elif resultado=='NO':
-        flash('Usuario no Existe en la base de datos')
-    else:
-        flash('No se pudo realizar la consulta')        
-
-    return redirect(url_for('recuperar'))    
-
-
 @app.route('/listamensindv', methods=['GET','POST'])
 def listar_mens_ind():
     if request.method=='POST':
@@ -119,8 +103,8 @@ def val_user():
                     session['username']=username
                     session['nombre']=resultado[0]['nombre'] +" "+resultado[0]['apellido']
                     listadouser=controlador.listar_usuarios(username)
-                    print(listadouser)
-                    return render_template('mensajeria.html',datauser=listadouser)
+                    #return render_template('mensajeria.html',datauser=listadouser)
+                    return redirect(url_for('mensajeria'))
                 else:
                     flash('Contraseña Invalida')
                     return redirect(url_for('login'))
@@ -136,16 +120,19 @@ def enviar_mesanjes():
     asunto=datos['asunto']
     destinatario=datos['destinatario']
     cuerpo=datos['cuerpo']
-    resultado=controlador.insertar_mensajes(remitente,destinatario,asunto,cuerpo)
+    if asunto =='' or destinatario=='' or cuerpo=='':
+        flash('Datos incompletos')
+        resultado=False
+    else:
+        resultado=controlador.insertar_mensajes(remitente,destinatario,asunto,cuerpo)
     if resultado:
         flash('Mensaje Enviado Correctamente')
-         
     else:
         flash('Error en el Envio')   
      
     listadouser=controlador.listar_usuarios(remitente)    
-    return render_template('mensajeria.html',datauser=listadouser)
-       
+    #return render_template('mensajeria.html',datauser=listadouser)
+    return redirect(url_for('mensajeria'))   
 
 
 @app.route('/addregistro', methods=['POST'])
@@ -181,38 +168,6 @@ def add_registro():
     #    return '<h1>No Ingreso el Nombre<h1>'    
 
 
-##############Formularios de Usuarios
-
-@app.route('/addusuario',methods=['POST'])
-def add_usuario():
-    datos=request.form
-    nombre=datos['nombre']
-    apellido=datos['apellido']
-    usuario=datos['email']
-    rol=datos['rol']
-    foto=datos['foto']
-    passw=datos['password']
-    print(nombre)
-    print(apellido)
-    print(usuario)
-    print(rol)
-    print(foto)
-    print(passw)
-    
-    return redirect(url_for('menu_user'))
-
-################Recuperar desde el Formulario Materias
-@app.route('/addmateria',methods=['POST'])
-def add_materia():
-    datos=request.form
-    codigomat=datos['codigomat']
-    nombremat=datos['nombremat']
-       
-    return redirect(url_for('menu_materias'))  
-
-
-
-
 #####################Rutas de Navegacion#######################################
 @app.route('/')
 def index():
@@ -235,7 +190,9 @@ def verificar():
 
 @app.route('/mensajeria')
 def mensajeria():
-    return render_template('mensajeria.html')
+    username=session['username']
+    listadouser=controlador.listar_usuarios(username)
+    return render_template('mensajeria.html',datauser=listadouser)
 
 
 @app.route('/recuperar')
@@ -245,14 +202,16 @@ def recuperar():
 @app.route('/restablecer/<usuario>')
 @app.route('/restablecer')
 def restablecer(usuario=None):
-    if usuario==None:
-        return render_template('restablecer.html')  
-    else:
-        return render_template('restablecer.html', datauser=usuario)      
+    usuario=session['username']
+    return render_template('restablecer.html', datauser=usuario)
+    #if usuario=='':
+    #    return render_template('restablecer.html')  
+    #else:
+    #    return render_template('restablecer.html', datauser=usuario)      
 
-@app.route('/mensajes')
-def mensajes():
-    return render_template('mensajes.html')    
+#@app.route('/mensajes')
+#def mensajes():
+#    return render_template('mensajes.html')    
 
 #@app.route('/menu')
 #@app.route('/menu/<username>/')
@@ -271,10 +230,6 @@ def mensajes():
 @app.route('/menu')
 def menu():
     return render_template('menu.html')
-
-@app.route('/usuarios')
-def menu_user():
-    return render_template('usuarios.html')
 
 
 @app.before_request
