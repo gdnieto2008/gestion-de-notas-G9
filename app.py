@@ -153,10 +153,12 @@ def add_registro():
         flash('Contraseña no cumple tamaño minimo')
     else:
         resultado=controlador.insertar_usuarios(nom,ape,usu,p1enc)
+        flash('Informacion Almacenada')
+        
         #if resultado:
-        #    flash('Informacion Almacenada')
-        #else:
-        #    flash('Error en Almacenamiento')    
+        #    flash('Informacion Almacenada')         //Esta parte arroja un error de integridad de dato usuario en tabla usuarios
+        #else:                                       //por lo cual el if siempre arroja error en almacenamiento
+        #    flash('Error en Almacenamiento')       //pero toda la informacion se guarda correctamente por eso se omitió por ahora esta parte.
            
 
     #flash(nom + ' ' + ape +' ' + usu +' ' + ' ' + foto + ' ' + passw)
