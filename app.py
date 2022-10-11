@@ -1,10 +1,6 @@
 
 
 from datetime import datetime
-import re
-from tkinter.messagebox import RETRY
-from unittest import result
-from xml.dom.minidom import ReadOnlySequentialNamedNodeMap
 from flask import Flask, jsonify, render_template, url_for,request,redirect, flash,session
 import controlador
 from werkzeug.security import generate_password_hash, check_password_hash
