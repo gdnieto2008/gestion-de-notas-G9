@@ -1,5 +1,3 @@
-
-
 from datetime import datetime
 from flask import Flask, jsonify, render_template, url_for,request,redirect, flash,session
 import controlador
@@ -110,8 +108,6 @@ def val_user():
                 if check_password_hash(resultado[0]['passwd'],passwd):
                     session['username']=username
                     session['nombre']=resultado[0]['nombre'] +" "+resultado[0]['apellido']
-                    listadouser=controlador.listar_usuarios(username)
-                    #return render_template('mensajeria.html',datauser=listadouser)
                     return redirect(url_for('mensajeria'))
                 else:
                     flash('Contraseña Invalida')
@@ -152,30 +148,21 @@ def add_registro():
     p1=datos['pass1']
     p2=datos['pass2']
     p1enc=generate_password_hash(p1)
-    controlador.insertar_usuarios(nom,ape,usu,p1enc)
-    if nom=='' or ape=='' or usu=='' or p1=='' or p2=='':
-        flash("Datos Incompletos")
-    elif p1!=p2:
-        flash("Las Contraseñas no Coinciden")    
-    elif len(p1)<8:
-        flash('Contraseña no cumple tamaño minimo')
-    else:
-        resultado=controlador.insertar_usuarios(nom,ape,usu,p1enc)
-        flash('Informacion Almacenada')
-        
-        #if resultado:
-        #    flash('Informacion Almacenada')         //Esta parte arroja un error de integridad de dato usuario en tabla usuarios
-        #else:                                       //por lo cual el if siempre arroja error en almacenamiento
-        #    flash('Error en Almacenamiento')       //pero toda la informacion se guarda correctamente por eso se omitió por ahora esta parte.
-           
+    validacion=controlador.validar_usuarios(usu)
+    if validacion == False:
+        if nom=='' or ape=='' or usu=='' or p1=='' or p2=='':
+            flash("Datos Incompletos")
+        elif p1!=p2:
+            flash("Las Contraseñas no coinciden")    
+        elif len(p1)<8:
+            flash('Contraseña no cumple tamaño minimo')
+        else:
+            resultado=controlador.insertar_usuarios(nom,ape,usu,p1enc)
+            flash('Se ha enviado un código de verificación a su correo, intente iniciar sesion para verificar la cuenta con dicho código')
+    else:                                      
+        flash('Ya se encuentra registrado')
 
-    #flash(nom + ' ' + ape +' ' + usu +' ' + ' ' + foto + ' ' + passw)
-    return redirect(url_for('registro'))
-    # validacion de los registros
-    #if nom !='':
-    #    return '<h3>'+nom + ' ' + ape +' ' + usu +' ' + ' ' + foto + ' ' + passw + '</h3>'
-    #else:
-    #    return '<h1>No Ingreso el Nombre<h1>'    
+    return redirect(url_for('registro'))   
 
 
 #####################Rutas de Navegacion#######################################
@@ -186,8 +173,12 @@ def index():
 
 @app.route('/login')
 def login():
-    session.clear()
     return render_template('login.html')
+
+@app.route('/salir')
+def salir():
+    session.clear()
+    return redirect(url_for('login'))
 
 @app.route('/registro')
 def registro():
@@ -211,32 +202,10 @@ def recuperar():
 @app.route('/restablecer/<usuario>')
 @app.route('/restablecer')
 def restablecer(usuario=None):
-    #usuario=session['username']
-    if usuario==None:
-    #    return render_template('restablecer.html')  
+    if usuario==None:  
         return render_template('restablecer.html')  
-    #else:
-    else:
-    #    return render_template('restablecer.html', datauser=usuario)      
+    else:    
         return render_template('restablecer.html', datauser=usuario)      
-
-#@app.route('/mensajes')
-#def mensajes():
-#    return render_template('mensajes.html')    
-
-#@app.route('/menu')
-#@app.route('/menu/<username>/')
-#def menu(username):
-#    return render_template('menu.html',usuvista=username)
-
-#Detectar los metodos de envio desde el formulario de login
-
-#@app.route('/menu', methods=['GET','POST'])
-#def menu():
-#    if request.method=='POST':
-#        return render_template('menu.html')
-#    else:
-#       return '<h1>Metodo GET</h1>'
 
 @app.route('/menu')
 def menu():
