@@ -21,8 +21,8 @@ def recuperar_email(email_destino):
     destinatario = email_destino
     mensaje="<hr>"
     mensaje = "<h2>Recuperacion de Cuenta</h2>"
-    mensaje =mensaje+ "<a href='https://proyectogrupo9mintic.herokuapp.com/restablecer/"+ email_destino +"'>Ingrese Aqui para restablecer su contraseña</a>"
-    #mensaje =mensaje+ "<a href='http://localhost:5000/restablecer/"+ email_destino +"'>Ingrese Aqui para restablecer su contraseña</a>" 
+    mensaje =mensaje + "<a href='http://localhost:5000/restablecer/"+ email_destino +"'>Ingrese Aqui para restablecer su contraseña</a> \n" 
+    mensaje = mensaje + "<a href='https://proyectogrupo9mintic.herokuapp.com/restablecer/"+ email_destino +"'>Ingrese Aqui para restablecer su contraseña heroku</a>"
     mensaje=mensaje+"<hr>"
     email = EmailMessage()
     email["From"] = remitente

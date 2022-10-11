@@ -43,7 +43,7 @@ def validar_email():
     if resultado=='SI':
         flash('Usuario Encontrado: Link de recuperacion enviado al correo')
     elif resultado=='NO':
-        flash('Usuario no Existe en la base de datos')
+        flash('Usuario no se encuentra registrado')
     else:
         flash('No se pudo realizar la consulta')        
     return redirect(url_for('recuperar'))
@@ -153,8 +153,8 @@ def add_registro():
     p2=datos['pass2']
     p1enc=generate_password_hash(p1)
     controlador.insertar_usuarios(nom,ape,usu,p1enc)
-    if nom=='' and ape=='' and usu=='' and p1=='' and p2=='':
-        flash("Datos Imcompletos")
+    if nom=='' or ape=='' or usu=='' or p1=='' or p2=='':
+        flash("Datos Incompletos")
     elif p1!=p2:
         flash("Las Contraseñas no Coinciden")    
     elif len(p1)<8:
@@ -211,12 +211,14 @@ def recuperar():
 @app.route('/restablecer/<usuario>')
 @app.route('/restablecer')
 def restablecer(usuario=None):
-    usuario=session['username']
-    return render_template('restablecer.html', datauser=usuario)
-    #if usuario=='':
+    #usuario=session['username']
+    if usuario==None:
     #    return render_template('restablecer.html')  
+        return render_template('restablecer.html')  
     #else:
+    else:
     #    return render_template('restablecer.html', datauser=usuario)      
+        return render_template('restablecer.html', datauser=usuario)      
 
 #@app.route('/mensajes')
 #def mensajes():
