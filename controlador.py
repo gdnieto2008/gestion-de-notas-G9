@@ -61,7 +61,13 @@ def activar_usuario(username,codver):
         sql='UPDATE usuarios SET verificado=1 WHERE usuario=? AND cod_verificacion=?'
         cursor.execute(sql,[username,codver])
         db.commit()
-        return True      
+        sql = 'SELECT * FROM usuarios WHERE usuario=? AND cod_verificacion=?'
+        cursor.execute(sql,[username,codver])
+        resultado=cursor.fetchone()
+        if resultado != None:
+            return "SI"
+        else:
+            return "NO"    
     except:
         return False
 

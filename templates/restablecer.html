@@ -45,11 +45,42 @@
                     {% if messages %}
                     {% for message in messages %}
                     
-                    <div class="alert alert-dismissible alert-info">
+                    {% if message ==  'Contraseñas no Coinciden' %}
+                      <div class="alert alert-dismissible alert-danger">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <h4 class="alert-heading">Alerta!!!</h4>
+                        <p class="mb-0">{{message}}</a>.</p>
+                      </div>
+                    {% endif %}
+
+                    {% if message ==  'Las contraseñas no cumplen los niveles de seguridad' %}
+                      <div class="alert alert-dismissible alert-danger">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <h4 class="alert-heading">Alerta!!!</h4>
+                        <p class="mb-0">{{message}}</a>.</p>
+                      </div>
+                    {% endif %}
+
+                    {% if message ==  'No ha sido posible restablecer la contraseña' %}
+                      <div class="alert alert-dismissible alert-danger">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <h4 class="alert-heading">Alerta!!!</h4>
+                        <p class="mb-0">{{message}}</a>.</p>
+                      </div>
+                    {% endif %}
+
+                    {% if message ==  'La contraseña ha sido restablecida con exito' %}
+                      <div class="alert alert-dismissible alert-info">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <h4 class="alert-heading">Validacion de la Cuenta</h4>
+                        <p class="mb-0">{{message}}</a>.</p>
+                      </div>
+                    {% endif %}
+                    <!--<div class="alert alert-dismissible alert-info">
                       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                       <h4 class="alert-heading">Validacion de Cuenta</h4>
                       <p class="mb-0">{{message}}</a>.</p>
-                    </div>
+                    </div>-->
                     
                     {% endfor %}
                     {% endif %}

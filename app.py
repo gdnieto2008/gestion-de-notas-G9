@@ -29,13 +29,13 @@ def restablece_clave():
     if p1!=p2:
         flash('Contraseñas no Coinciden')
     elif len(p1)<8:
-        flash('las contraseñas no cumplen los niveles de seguridad')
+        flash('Las contraseñas no cumplen los niveles de seguridad')
     else:
          resultado=controlador.restablecer_clave(p1enc,usu)
          if resultado:
             flash('La contraseña ha sido restablecida con exito')
          else:
-            flash("No ha sido posibles restablecer la contraseña")   
+            flash("No ha sido posible restablecer la contraseña")   
     
     return render_template('restablecer.html', datauser=usu)  
 
@@ -75,7 +75,7 @@ def activar_cuenta():
     username=datos['username']
     codver=datos['codverificacion']
     resultado=controlador.activar_usuario(username,codver)
-    if resultado:
+    if resultado == "SI":
         flash('Cuenta Activada Satisfactoriamente')    
     else:
         flash('Error en Activacion') 
@@ -90,6 +90,7 @@ def val_user():
     passwd=datos['password']
     if username=='' or passwd=='':
         flash('Datos Incompletos')
+        return redirect(url_for('login'))
     else:
         resultado=controlador.validar_usuarios(username)
         if resultado==False:
