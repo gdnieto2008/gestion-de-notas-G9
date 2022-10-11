@@ -35,7 +35,18 @@ def restablece_clave():
     
     return render_template('restablecer.html', datauser=usu)  
 
-
+@app.route('/validaremail', methods=['POST'])
+def validar_email():
+    datos=request.form
+    usu=datos['username']
+    resultado=controlador.validar_email(usu)
+    if resultado=='SI':
+        flash('Usuario Encontrado: Link de recuperacion enviado al correo')
+    elif resultado=='NO':
+        flash('Usuario no Existe en la base de datos')
+    else:
+        flash('No se pudo realizar la consulta')        
+    return redirect(url_for('recuperar'))
 
 @app.route('/listamensindv', methods=['GET','POST'])
 def listar_mens_ind():
@@ -192,7 +203,6 @@ def mensajeria():
     username=session['username']
     listadouser=controlador.listar_usuarios(username)
     return render_template('mensajeria.html',datauser=listadouser)
-
 
 @app.route('/recuperar')
 def recuperar():
