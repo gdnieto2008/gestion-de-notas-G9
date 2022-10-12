@@ -124,7 +124,8 @@ def enviar_mesanjes():
     asunto=datos['asunto']
     destinatario=datos['destinatario']
     cuerpo=datos['cuerpo']
-    if asunto =='' or destinatario=='' or cuerpo=='':
+    print('destinatario: ' + destinatario)
+    if asunto =='' or destinatario=='seleccione' or cuerpo=='':
         flash('Datos incompletos')
         resultado=False
     else:
@@ -133,9 +134,7 @@ def enviar_mesanjes():
         flash('Mensaje Enviado Correctamente')
     else:
         flash('Error en el Envio')   
-     
-    listadouser=controlador.listar_usuarios(remitente)    
-    #return render_template('mensajeria.html',datauser=listadouser)
+           
     return redirect(url_for('mensajeria'))   
 
 
